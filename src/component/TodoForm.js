@@ -1,11 +1,14 @@
 import React from "react";
 import ListShow from "./ListShow";
+import {DatePicker} from 'react-persian-datepicker';
+import classes from '../basic.module.css'
 
 class TodoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       text: "",
+      date: "",
       todoList: [],
       showList: "All"
     };
@@ -14,32 +17,25 @@ class TodoForm extends React.Component {
   handleChange = e => {
     this.setState({ text: e.target.value });
   };
+
+  handleChangeDate = e => {
+    this.setState({ date: e.target.value });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     this.setState({
       todoList: [
-        { text: this.state.text, done: false },
+        { text: this.state.text, done: false, id: new Date(), deadline: new Date(this.state.date) },
         ...this.state.todoList
       ],
-      text: ""
+      text: "",
+      date: ""
     });
+    // setTimeout(() => console.log(this.state.todoList[0].id, this.state.todoList[0].deadline), 1000);
   };
 
   onDone = index => {
-    // let newTodoList = this.state.todoList.map((todo, indexTodo) => {
-    //   if (indexTodo === index) {
-    //     todo.done = !todo.done;
-    //   }
-    //   return todo;
-    // });
-    // let newTodoList = [...this.state.todoList];
-    // let newTodoObj = { ...newTodoList[index] };
-    // newTodoObj.done = !newTodoObj.done;
-    // newTodoList[index] = newTodoObj;
-    // console.log(this.state.todoList);
-    // this.setState({
-    //   todoList: newTodoList
-    // });
     this.setState(state => ({
       todoList: state.todoList.map((todo, indexTodo) => {
         if (indexTodo === index) {
@@ -52,19 +48,26 @@ class TodoForm extends React.Component {
   };
 
   render() {
+    let searchList = [];
     let newTodo = [];
     if (this.state.showList === "All") newTodo = this.state.todoList;
     else if (this.state.showList === "Done")
       newTodo = this.state.todoList.filter(todo => todo.done);
     else newTodo = this.state.todoList.filter(todo => !todo.done);
+
+    searchList = newTodo.filter(todo => todo.text.includes(this.props.search));
+
     return (
       <>
         <div className="App">
+          <h2>Add Form</h2>
           <form onSubmit={this.handleSubmit}>
-            <input value={this.state.text} onChange={this.handleChange} />
-            <button type="submit">TodoAdd</button>
+            <input placeholder="Title" type="text" value={this.state.text} onChange={this.handleChange} />
+            <DatePicker styles={classes} />
+            <input placeholder="Date" type="date" value={this.state.date} onChange={this.handleChangeDate} />
+            <button type="submit">Add Todo</button>
           </form>
-          {newTodo.map((todo, index) => (
+          {searchList.map((todo, index) => (
             <ListShow
               key={index}
               todo={todo}
