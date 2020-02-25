@@ -4,10 +4,10 @@ export default props => {
   const diffTime = Math.abs(props.todo.deadline - props.todo.id);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return (<div
+    className="todo-item"
     style={{ color: props.todo.done ? "blue" : "" }}
     onClick={props.handleDone}
   >
-    {" "}
-    Title: {props.todo.text} Deadline: {String(props.todo.deadline)} Days Until Deadline: {diffDays}
+    Title: <span className="todo-details">{props.todo.text}</span> Deadline: <span className="todo-details">{props.todo.deadline.toLocaleDateString()}</span> Days Until Deadline: <span className="todo-details">{diffDays}</span>
   </div>)
 };

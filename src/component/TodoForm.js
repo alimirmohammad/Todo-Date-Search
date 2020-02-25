@@ -1,7 +1,5 @@
 import React from "react";
 import ListShow from "./ListShow";
-import {DatePicker} from 'react-persian-datepicker';
-import classes from '../basic.module.css'
 
 class TodoForm extends React.Component {
   constructor(props) {
@@ -32,15 +30,14 @@ class TodoForm extends React.Component {
       text: "",
       date: ""
     });
-    // setTimeout(() => console.log(this.state.todoList[0].id, this.state.todoList[0].deadline), 1000);
   };
 
-  onDone = index => {
+  onDone = id => {
+    const index = this.state.todoList.findIndex(todo => todo.id === id)
     this.setState(state => ({
       todoList: state.todoList.map((todo, indexTodo) => {
         if (indexTodo === index) {
           todo.done = !todo.done;
-          console.log(this.state.todoList);
         }
         return todo;
       })
@@ -59,33 +56,33 @@ class TodoForm extends React.Component {
 
     return (
       <>
-        <div className="App">
-          <h2>Add Form</h2>
+        <div>
+          <h2 className="heading-secondary">Add New Todo</h2>
           <form onSubmit={this.handleSubmit}>
-            <input placeholder="Title" type="text" value={this.state.text} onChange={this.handleChange} />
-            <DatePicker styles={classes} />
-            <input placeholder="Date" type="date" value={this.state.date} onChange={this.handleChangeDate} />
-            <button type="submit">Add Todo</button>
+            <input required className="input-text" placeholder="Title" type="text" value={this.state.text} onChange={this.handleChange} />
+            <input required className="input-text" placeholder="Date" type="date" value={this.state.date} onChange={this.handleChangeDate} />
+            <button className="btn-text" type="submit">Add Todo</button>
           </form>
-          {searchList.map((todo, index) => (
+          <div>
+            <button className="btn-filter" onClick={() => this.setState({ showList: "All" })}>
+              All
+          </button>{" "}
+            <button className="btn-filter" onClick={() => this.setState({ showList: "Done" })}>
+              Done
+          </button>{" "}
+            <button className="btn-filter" onClick={() => this.setState({ showList: "unDone" })}>
+              unDone
+          </button>
+          </div>
+          {searchList.slice(0, 10).map((todo, index) => (
             <ListShow
               key={index}
               todo={todo}
-              handleDone={() => this.onDone(index)}
+              handleDone={() => this.onDone(todo.id)}
             />
           ))}
         </div>
-        <div>
-          <button onClick={() => this.setState({ showList: "All" })}>
-            All
-          </button>{" "}
-          <button onClick={() => this.setState({ showList: "Done" })}>
-            Done
-          </button>{" "}
-          <button onClick={() => this.setState({ showList: "unDone" })}>
-            unDone
-          </button>
-        </div>
+
       </>
     );
   }
