@@ -15,7 +15,7 @@ class TodoForm extends React.Component {
       todo.id = new Date(Date.parse(todo.id));
       todo.deadline = new Date(Date.parse(todo.deadline));
       return todo;
-    })
+    });
   }
 
   componentDidUpdate() {
@@ -37,6 +37,10 @@ class TodoForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    if (!this.state.date) {
+      alert('Please choose a date for deadline');
+      return;
+    }
     this.setState({
       todoList: [
         { text: this.state.text, done: false, id: new Date(), deadline: new Date(this.state.date) },
