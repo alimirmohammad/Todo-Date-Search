@@ -18,9 +18,7 @@ export default class SearchItem extends Component {
                 <h2 className="heading-primary u-margin-bottom-small">Todo App</h2>
                 <form className="form-search" onSubmit={this.handleSubmit}>
                     <input className="input-text" value={this.state.text} onChange={this.handleChange} />
-                    
                     <button className="btn-text">Search</button>
-                    
                 </form>
                 <TodoForm search={this.state.text} />
             </div>

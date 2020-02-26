@@ -8,6 +8,6 @@ export default props => {
     style={{ color: props.todo.done ? "blue" : "" }}
     onClick={props.handleDone}
   >
-    Title: <span className="todo-details">{props.todo.text}</span> Deadline: <span className="todo-details">{props.todo.deadline.toLocaleDateString()}</span> Days Until Deadline: <span className="todo-details">{diffDays}</span>
+    Title: <span className="todo-details">{props.todo.text}</span> Registered: <span className="todo-details">{props.todo.id.toLocaleDateString('fa-IR')}</span> Deadline: <span className="todo-details">{props.todo.deadline.toLocaleDateString('fa-IR')}</span> Days Until Deadline: <span className="todo-details">{diffDays}</span>
   </div>)
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import ListShow from "./ListShow";
+import { DatePicker } from "jalali-react-datepicker";
 
 class TodoForm extends React.Component {
   constructor(props) {
@@ -7,17 +8,31 @@ class TodoForm extends React.Component {
     this.state = {
       text: "",
       date: "",
-      todoList: [],
+      todoList: JSON.parse(localStorage.getItem('todoList')) || [],
       showList: "All"
     };
+    this.state.todoList.map(todo => {
+      todo.id = new Date(Date.parse(todo.id));
+      todo.deadline = new Date(Date.parse(todo.deadline));
+      return todo;
+    })
   }
+
+  componentDidUpdate() {
+    localStorage.setItem('todoList', JSON.stringify(this.state.todoList));
+  }
+
+  // componentDidMount() {
+  //   this.setState({todoList: JSON.parse(localStorage.getItem('todoList')) || []},
+  //   () => this.state.todoList.map(todo => {
+  //     todo.id = new Date(Date.parse(todo.id));
+  //     todo.deadline = new Date(Date.parse(todo.deadline));
+  //     return todo;
+  //   }));
+  // };
 
   handleChange = e => {
     this.setState({ text: e.target.value });
-  };
-
-  handleChangeDate = e => {
-    this.setState({ date: e.target.value });
   };
 
   handleSubmit = e => {
@@ -33,16 +48,20 @@ class TodoForm extends React.Component {
   };
 
   onDone = id => {
-    const index = this.state.todoList.findIndex(todo => todo.id === id)
-    this.setState(state => ({
-      todoList: state.todoList.map((todo, indexTodo) => {
+    const index = this.state.todoList.findIndex(todo => todo.id === id);
+    this.setState({
+      todoList: this.state.todoList.map((todo, indexTodo) => {
         if (indexTodo === index) {
           todo.done = !todo.done;
         }
         return todo;
       })
-    }));
+    });
   };
+
+  submitExample = ({ value }) => {
+    this.setState({ date: value.toDate() });  
+  }
 
   render() {
     let searchList = [];
@@ -60,7 +79,9 @@ class TodoForm extends React.Component {
           <h2 className="heading-secondary">Add New Todo</h2>
           <form onSubmit={this.handleSubmit}>
             <input required className="input-text" placeholder="Title" type="text" value={this.state.text} onChange={this.handleChange} />
-            <input required className="input-text" placeholder="Date" type="date" value={this.state.date} onChange={this.handleChangeDate} />
+            <div className="input-text">
+              <DatePicker onClickSubmitButton={this.submitExample} />  
+            </div>          
             <button className="btn-text" type="submit">Add Todo</button>
           </form>
           <div>
